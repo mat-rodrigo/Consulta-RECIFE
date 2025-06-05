@@ -5,14 +5,14 @@ Este aplicativo interativo desenvolvido com **Shiny** permite a análise e visua
 ## 🚀 Funcionalidades
 
 - **Dashboard interativo** com:
-  - Filtros por unidade, classe, apresentação, tipo de produto, quantidade e nome do produto.
+  - Filtros por unidade, apresentação, tipo de produto, quantidade e nome do produto.
   - Indicadores resumidos:
     - Total de medicamentos listados.
     - Total de unidades de saúde.
     - Produto com maior quantidade em estoque.
   - Visualizações gráficas:
     - Gráfico de pizza com proporção por apresentação.
-    - Gráfico condicional mostrando quantidade por unidade.
+    - Gráfico condicional mostrando quantidade de medicamento por unidade.
 
 - **Tabela de dados filtrados** com possibilidade de download em CSV.
 - **Design responsivo** utilizando `shinydashboard`.
