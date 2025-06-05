@@ -11,9 +11,8 @@ Este aplicativo interativo desenvolvido com **Shiny** permite a análise e visua
     - Total de unidades de saúde.
     - Produto com maior quantidade em estoque.
   - Visualizações gráficas:
-    - Gráfico de barras com os 10 produtos com maior quantidade.
     - Gráfico de pizza com proporção por apresentação.
-    - Gráfico condicional mostrando quantidade por unidade ou top 10 produtos.
+    - Gráfico condicional mostrando quantidade por unidade.
 
 - **Tabela de dados filtrados** com possibilidade de download em CSV.
 - **Design responsivo** utilizando `shinydashboard`.
