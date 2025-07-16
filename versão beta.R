@@ -72,6 +72,8 @@ ui <- dashboardPage(
       tags$style(HTML("
         .small-box p { font-size: 13px !important; }
         .small-box h3 { font-size: 20px !important; }
+        .selectize-input { min-height: 38px; }
+        .selectize-dropdown { z-index: 9999; }
       "))
     ),
     tabItems(
@@ -86,22 +88,34 @@ ui <- dashboardPage(
                 box(width = 12, title = "Filtros de Dados", status = "primary", solidHeader = TRUE,
                     fluidRow(
                       column(width = 4,
-                             selectInput("unidade_selecionada", "Selecionar Unidade(s):",
-                                         choices = NULL, multiple = TRUE)
+                             selectizeInput("unidade_selecionada", "Selecionar Unidade(s):",
+                                           choices = NULL, multiple = TRUE, 
+                                           options = list(placeholder = "Digite para buscar unidades...",
+                                                        maxItems = NULL,
+                                                        create = FALSE))
                       ),
                       column(width = 4,
-                             selectInput("apresentacao_selecionada", "Filtrar por Apresentação:",
-                                         choices = NULL, selected = "Todas")
+                             selectizeInput("apresentacao_selecionada", "Filtrar por Apresentação:",
+                                           choices = NULL, selected = "Todas",
+                                           options = list(placeholder = "Digite para buscar apresentações...",
+                                                        maxItems = 1,
+                                                        create = FALSE))
                       ),
                       column(width = 4,
-                             selectInput("tipo_produto_selecionado", "Filtrar por Tipo de Produto:",
-                                         choices = NULL, selected = "Todos")
+                             selectizeInput("tipo_produto_selecionado", "Filtrar por Tipo de Produto:",
+                                           choices = NULL, selected = "Todos",
+                                           options = list(placeholder = "Digite para buscar tipos...",
+                                                        maxItems = 1,
+                                                        create = FALSE))
                       )
                     ),
                     fluidRow(
                       column(width = 6,
-                             selectInput("produtos_selecionados", "Selecionar Produto(s):",
-                                         choices = NULL, multiple = TRUE)
+                             selectizeInput("produtos_selecionados", "Selecionar Produto(s):",
+                                           choices = NULL, multiple = TRUE,
+                                           options = list(placeholder = "Digite para buscar produtos...",
+                                                        maxItems = NULL,
+                                                        create = FALSE))
                       ),
                       column(width = 6,
                              sliderInput("quantidade_range", "Filtrar por Quantidade (Individual):",
@@ -145,19 +159,37 @@ server <- function(input, output, session) {
     } else {
       character(0) 
     }
-    updateSelectInput(session, "unidade_selecionada",
-                      choices = unidades_disponiveis,
-                      selected = primeira_unidade_selecionada)
+    updateSelectizeInput(session, "unidade_selecionada",
+                        choices = unidades_disponiveis,
+                        selected = primeira_unidade_selecionada,
+                        options = list(placeholder = "Digite para buscar unidades...",
+                                     maxItems = NULL,
+                                     create = FALSE))
     
     apresentacoes_validas <- dados %>% filter(!is.na(apresentacao) & apresentacao != "") %>% distinct(apresentacao) %>% pull()
     apresentacoes_disponiveis <- c("Todas", sort(apresentacoes_validas))
-    updateSelectInput(session, "apresentacao_selecionada", choices = apresentacoes_disponiveis, selected = "Todas")
+    updateSelectizeInput(session, "apresentacao_selecionada", 
+                        choices = apresentacoes_disponiveis, 
+                        selected = "Todas",
+                        options = list(placeholder = "Digite para buscar apresentações...",
+                                     maxItems = 1,
+                                     create = FALSE))
     
     tipos_produto_disponiveis <- c("Todos", sort(unique(dados$tipo_produto)))
-    updateSelectInput(session, "tipo_produto_selecionado", choices = tipos_produto_disponiveis, selected = "Todos")
+    updateSelectizeInput(session, "tipo_produto_selecionado", 
+                        choices = tipos_produto_disponiveis, 
+                        selected = "Todos",
+                        options = list(placeholder = "Digite para buscar tipos...",
+                                     maxItems = 1,
+                                     create = FALSE))
     
     produtos_disponiveis <- sort(unique(dados$produto))
-    updateSelectInput(session, "produtos_selecionados", choices = produtos_disponiveis, selected = character(0))
+    updateSelectizeInput(session, "produtos_selecionados", 
+                        choices = produtos_disponiveis, 
+                        selected = character(0),
+                        options = list(placeholder = "Digite para buscar produtos...",
+                                     maxItems = NULL,
+                                     create = FALSE))
     
     min_qty <- min(dados$quantidade, na.rm = TRUE)
     max_qty <- max(dados$quantidade, na.rm = TRUE)
