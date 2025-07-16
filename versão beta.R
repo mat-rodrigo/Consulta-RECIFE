@@ -165,7 +165,7 @@ ui <- dashboardPage(
                                  actionButton("instagram_page_btn", "Visitar Instagram", 
                                              icon = icon("external-link-alt"),
                                              style = "background-color: #E4405F; color: white; border: none;",
-                                             onclick = "window.open('https://www.instagram.com/recifemedicamentos/profilecard/?igsh=amdjN3k4c2pkM2dm', '_blank')")
+                                             onclick = "window.open('https://www.instagram.com/consultarecife/profilecard/?igsh=amdjN3k4c2pkM2dm', '_blank')")
                              )
                       )
                     )
