@@ -58,7 +58,7 @@ dados <- dados %>%
 
 # --- Interface do Usuário (UI) ---
 ui <- dashboardPage(
-  dashboardHeader(title = "Análise de Estoque de Medicamentos"),
+  dashboardHeader(title = "ConsultaRecife"),
   
   dashboardSidebar(
     sidebarMenu(
@@ -66,13 +66,7 @@ ui <- dashboardPage(
       menuItem("Tabela de Dados", tabName = "tabela", icon = icon("table")),
       hr(),
       menuItem("Redes Sociais", tabName = "redes_sociais", icon = icon("share-alt")),
-      hr(),
-      div(style = "padding: 15px;",
-          actionButton("instagram_btn", "Siga-nos no Instagram", 
-                      icon = icon("instagram"), 
-                      style = "background-color: #E4405F; color: white; border: none; width: 100%; margin-bottom: 10px;",
-                      onclick = "window.open('https://www.instagram.com/recifemedicamentos/profilecard/?igsh=amdjN3k4c2pkM2dm', '_blank')")
-      )
+      hr()
     )
   ),
   
