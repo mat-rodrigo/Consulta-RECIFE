@@ -63,7 +63,16 @@ ui <- dashboardPage(
   dashboardSidebar(
     sidebarMenu(
       menuItem("Dashboard", tabName = "dashboard", icon = icon("dashboard")),
-      menuItem("Tabela de Dados", tabName = "tabela", icon = icon("table"))
+      menuItem("Tabela de Dados", tabName = "tabela", icon = icon("table")),
+      hr(),
+      menuItem("Redes Sociais", tabName = "redes_sociais", icon = icon("share-alt")),
+      hr(),
+      div(style = "padding: 15px;",
+          actionButton("instagram_btn", "Siga-nos no Instagram", 
+                      icon = icon("instagram"), 
+                      style = "background-color: #E4405F; color: white; border: none; width: 100%; margin-bottom: 10px;",
+                      onclick = "window.open('https://www.instagram.com/recifemedicamentos/profilecard/?igsh=amdjN3k4c2pkM2dm', '_blank')")
+      )
     )
   ),
   
@@ -74,6 +83,15 @@ ui <- dashboardPage(
         .small-box h3 { font-size: 20px !important; }
         .selectize-input { min-height: 38px; }
         .selectize-dropdown { z-index: 9999; }
+        .btn-social { 
+          transition: all 0.3s ease;
+          border-radius: 5px;
+          font-weight: bold;
+        }
+        .btn-social:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
       "))
     ),
     tabItems(
@@ -138,6 +156,26 @@ ui <- dashboardPage(
                 box(width = 12, title = "Dados Filtrados", status = "primary", solidHeader = TRUE,
                     downloadButton("download_dados", "Download Dados Filtrados (CSV)"),
                     DTOutput("tabela_dados_filtrados"))
+              )
+      ),
+      
+      tabItem(tabName = "redes_sociais",
+              fluidRow(
+                box(width = 12, title = "Conecte-se Conosco", status = "primary", solidHeader = TRUE,
+                    fluidRow(
+                      column(width = 12,
+                             div(style = "text-align: center; padding: 20px;",
+                                 icon("instagram", "fa-3x", style = "color: #E4405F; margin-bottom: 15px;"),
+                                 h3("Instagram"),
+                                 p("Siga-nos para novidades e atualizações"),
+                                 actionButton("instagram_page_btn", "Visitar Instagram", 
+                                             icon = icon("external-link-alt"),
+                                             style = "background-color: #E4405F; color: white; border: none;",
+                                             onclick = "window.open('https://www.instagram.com/recifemedicamentos/profilecard/?igsh=amdjN3k4c2pkM2dm', '_blank')")
+                             )
+                      )
+                    )
+                )
               )
       )
     )
