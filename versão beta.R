@@ -9,14 +9,22 @@ library(shinydashboard) # Para um layout de dashboard profissional
 library(scales)       # Para formatação de números e porcentagens
 
 # --- LEITURA E MAPEAMENTO DOS DADOS ---
-# 1. Lista de arquivos de distritos disponíveis
-arquivos_distritos <- list.files(pattern = "medicamentos_distrito\\d+\\.csv$")
-
-# Função para extrair o nome amigável do distrito
-nome_distrito <- function(nome_arquivo) {
-  num <- gsub("[^0-9]", "", nome_arquivo)
-  paste("Distrito", num)
-}
+# 1. Lista de distritos e URLs
+nomes_distritos <- c(
+  "Distrito 01", "Distrito 02", "Distrito 03", "Distrito 04",
+  "Distrito 05", "Distrito 06", "Distrito 07", "Distrito 08"
+)
+urls_distritos <- c(
+  "http://dados.recife.pe.gov.br/dataset/3d228c7d-beff-49d7-b126-95016b280cf2/resource/e976dc6a-3e64-4386-b4c0-850852e7a21e/download/medicamentos_distrito01.csv",
+  "http://dados.recife.pe.gov.br/dataset/3d228c7d-beff-49d7-b126-95016b280cf2/resource/4be8f291-38e5-4a35-9bdc-07b10f54a05d/download/medicamentos_distrito02.csv",
+  "http://dados.recife.pe.gov.br/dataset/3d228c7d-beff-49d7-b126-95016b280cf2/resource/a7a966de-fa73-47ed-a87e-a53d336038d0/download/medicamentos_distrito03.csv",
+  "http://dados.recife.pe.gov.br/dataset/3d228c7d-beff-49d7-b126-95016b280cf2/resource/eaa007ad-faed-477a-a085-c84bddb47224/download/medicamentos_distrito04.csv",
+  "http://dados.recife.pe.gov.br/dataset/3d228c7d-beff-49d7-b126-95016b280cf2/resource/05e529b2-3b1c-4b7f-a0f0-31abc9602a68/download/medicamentos_distrito05.csv",
+  "http://dados.recife.pe.gov.br/dataset/3d228c7d-beff-49d7-b126-95016b280cf2/resource/a83090c7-9dfa-4584-afd6-9da301b095eb/download/medicamentos_distrito06.csv",
+  "http://dados.recife.pe.gov.br/dataset/3d228c7d-beff-49d7-b126-95016b280cf2/resource/a075f4fe-cf7c-4af6-9b73-1f07f9936de4/download/medicamentos_distrito07.csv",
+  "http://dados.recife.pe.gov.br/dataset/3d228c7d-beff-49d7-b126-95016b280cf2/resource/99eb6b09-20dd-4da8-b9c4-3f696b19fa79/download/medicamentos_distrito08.csv"
+)
+mapa_distritos <- setNames(urls_distritos, nomes_distritos)
 
 # UI: Adicionar tela inicial de seleção de distrito
 ui <- dashboardPage(
@@ -54,8 +62,8 @@ ui <- dashboardPage(
         fluidRow(
           box(width = 6, title = "Escolha o Distrito para Análise", status = "primary", solidHeader = TRUE,
             selectInput("distrito_escolhido", "Distrito:",
-              choices = setNames(arquivos_distritos, sapply(arquivos_distritos, nome_distrito)),
-              selected = arquivos_distritos[1]
+              choices = nomes_distritos,
+              selected = nomes_distritos[1]
             ),
             actionButton("confirmar_distrito", "Confirmar", icon = icon("check"))
           )
@@ -150,22 +158,37 @@ ui <- dashboardPage(
 
 # --- Lógica do Servidor (Server) ---
 server <- function(input, output, session) {
-  # Estado reativo para armazenar o nome do arquivo selecionado
-  distrito_arquivo <- reactiveVal(arquivos_distritos[1])
+  # Estado reativo para armazenar o nome do distrito selecionado
+  distrito_nome <- reactiveVal(nomes_distritos[1])
 
-  # Quando o usuário clicar em confirmar, atualiza o arquivo do distrito
+  # Quando o usuário clicar em confirmar, atualiza o distrito selecionado
   observeEvent(input$confirmar_distrito, {
-    distrito_arquivo(input$distrito_escolhido)
+    distrito_nome(input$distrito_escolhido)
     updateTabItems(session, "tabs", selected = "dashboard")
   })
 
   # Dados reativos baseados no distrito selecionado
   initial_dados <- reactive({
-    arquivo <- distrito_arquivo()
-    if (!is.null(arquivo) && file.exists(arquivo)) {
-      read.csv(arquivo, encoding = "UTF-8", stringsAsFactors = FALSE, row.names = NULL)
+    url <- mapa_distritos[[distrito_nome()]]
+    if (!is.null(url) && nzchar(url)) {
+      tryCatch({
+        read.csv(url, encoding = "UTF-8", stringsAsFactors = FALSE, row.names = NULL)
+      }, error = function(e) {
+        warning(paste("Erro ao ler o arquivo do distrito:", distrito_nome(), "- Usando dados de exemplo."))
+        data.frame(
+          distrito = rep(paste("Unidade Exemplo", 1:2), each = 50),
+          unidade = rep(paste("Classe Exemplo", LETTERS[1:5]), each = 10, length.out = 100), 
+          classe = rep(paste("Apresentacao Exemplo", c("AMP", "COMPR", "FRASCO", "SACHE", "BISNAGA")), each = 20, length.out = 100), 
+          apresentacao = rep(c("Tipo A", "Tipo B", "Tipo C"), length.out = 100), 
+          tipo_produto = sample(paste0("Cod ", 1001:1020), 100, replace = TRUE), 
+          codigo_produto = paste("Produto Exemplo", sample(LETTERS, 100, replace = TRUE), sprintf("%03d", sample(1:50, 100, replace = TRUE))), 
+          produto = sample(1:200, 100, replace = TRUE), 
+          cadum = sample(c(1:250, 280:500, 1000:2000), 100, replace = TRUE), 
+          stringsAsFactors = FALSE
+        )
+      })
     } else {
-      warning(paste("Arquivo", arquivo, "não encontrado. Usando dados de exemplo."))
+      warning(paste("URL do distrito não encontrada. Usando dados de exemplo."))
       data.frame(
         distrito = rep(paste("Unidade Exemplo", 1:2), each = 50),
         unidade = rep(paste("Classe Exemplo", LETTERS[1:5]), each = 10, length.out = 100), 
