@@ -9,59 +9,21 @@ library(shinydashboard) # Para um layout de dashboard profissional
 library(scales)       # Para formatação de números e porcentagens
 
 # --- LEITURA E MAPEAMENTO DOS DADOS ---
-# 1. Carrega o arquivo CSV
-if (file.exists("medicamentos_distrito03.csv")) {
-  initial_dados <- read.csv("medicamentos_distrito03.csv", encoding = "UTF-8", stringsAsFactors = FALSE, row.names = NULL)
-} else {
-  warning("Arquivo 'medicamentos_distrito03.csv' não encontrado. Usando dados de exemplo.")
-  initial_dados <- data.frame(
-    distrito = rep(paste("Unidade Exemplo", 1:2), each = 50),
-    unidade = rep(paste("Classe Exemplo", LETTERS[1:5]), each = 10, length.out = 100), 
-    classe = rep(paste("Apresentacao Exemplo", c("AMP", "COMPR", "FRASCO", "SACHE", "BISNAGA")), each = 20, length.out = 100), 
-    apresentacao = rep(c("Tipo A", "Tipo B", "Tipo C"), length.out = 100), 
-    tipo_produto = sample(paste0("Cod ", 1001:1020), 100, replace = TRUE), 
-    codigo_produto = paste("Produto Exemplo", sample(LETTERS, 100, replace = TRUE), sprintf("%03d", sample(1:50, 100, replace = TRUE))), 
-    produto = sample(1:200, 100, replace = TRUE), 
-    cadum = sample(c(1:250, 280:500, 1000:2000), 100, replace = TRUE), 
-    stringsAsFactors = FALSE
-  )
+# 1. Lista de arquivos de distritos disponíveis
+arquivos_distritos <- list.files(pattern = "medicamentos_distrito\\d+\\.csv$")
+
+# Função para extrair o nome amigável do distrito
+nome_distrito <- function(nome_arquivo) {
+  num <- gsub("[^0-9]", "", nome_arquivo)
+  paste("Distrito", num)
 }
 
-# 2. Cria um novo dataframe 'dados' mapeando o conteúdo
-dados <- data.frame(
-  unidade = initial_dados$distrito,
-  classe = initial_dados$unidade, 
-  apresentacao = initial_dados$classe, 
-  tipo_produto = initial_dados$apresentacao, 
-  codigo_produto = initial_dados$tipo_produto, 
-  produto = initial_dados$codigo_produto, 
-  cadum = initial_dados$produto, 
-  quantidade = initial_dados$cadum, 
-  stringsAsFactors = FALSE
-)
-
-# 3. Limpeza e conversão de tipos
-dados$quantidade <- as.numeric(dados$quantidade)
-dados$produto <- as.character(dados$produto)
-dados$unidade <- as.character(dados$unidade) 
-dados$classe <- as.character(dados$classe)
-dados$apresentacao <- as.character(dados$apresentacao)
-dados$tipo_produto <- as.character(dados$tipo_produto)
-
-dados <- dados %>% 
-  filter(!is.na(quantidade)) %>%
-  filter(!is.na(unidade) & unidade != "") %>%
-  filter(!is.na(produto) & produto != "") %>%
-  filter(!is.na(apresentacao) & apresentacao != "") %>%
-  filter(!is.na(tipo_produto) & tipo_produto != "")
-
-
-# --- Interface do Usuário (UI) ---
+# UI: Adicionar tela inicial de seleção de distrito
 ui <- dashboardPage(
   dashboardHeader(title = "ConsultaRecife"),
-  
   dashboardSidebar(
     sidebarMenu(
+      menuItem("Selecionar Distrito", tabName = "selecao_distrito", icon = icon("map-marker-alt")),
       menuItem("Dashboard", tabName = "dashboard", icon = icon("dashboard")),
       menuItem("Tabela de Dados", tabName = "tabela", icon = icon("table")),
       hr(),
@@ -69,7 +31,6 @@ ui <- dashboardPage(
       hr()
     )
   ),
-  
   dashboardBody(
     tags$head(
       tags$style(HTML("
@@ -89,6 +50,17 @@ ui <- dashboardPage(
       "))
     ),
     tabItems(
+      tabItem(tabName = "selecao_distrito",
+        fluidRow(
+          box(width = 6, title = "Escolha o Distrito para Análise", status = "primary", solidHeader = TRUE,
+            selectInput("distrito_escolhido", "Distrito:",
+              choices = setNames(arquivos_distritos, sapply(arquivos_distritos, nome_distrito)),
+              selected = arquivos_distritos[1]
+            ),
+            actionButton("confirmar_distrito", "Confirmar", icon = icon("check"))
+          )
+        )
+      ),
       tabItem(tabName = "dashboard",
               fluidRow(
                 valueBoxOutput("total_medicamentos_card", width = 3),
@@ -178,14 +150,71 @@ ui <- dashboardPage(
 
 # --- Lógica do Servidor (Server) ---
 server <- function(input, output, session) {
+  # Estado reativo para armazenar o nome do arquivo selecionado
+  distrito_arquivo <- reactiveVal(arquivos_distritos[1])
+
+  # Quando o usuário clicar em confirmar, atualiza o arquivo do distrito
+  observeEvent(input$confirmar_distrito, {
+    distrito_arquivo(input$distrito_escolhido)
+    updateTabItems(session, "tabs", selected = "dashboard")
+  })
+
+  # Dados reativos baseados no distrito selecionado
+  initial_dados <- reactive({
+    arquivo <- distrito_arquivo()
+    if (!is.null(arquivo) && file.exists(arquivo)) {
+      read.csv(arquivo, encoding = "UTF-8", stringsAsFactors = FALSE, row.names = NULL)
+    } else {
+      warning(paste("Arquivo", arquivo, "não encontrado. Usando dados de exemplo."))
+      data.frame(
+        distrito = rep(paste("Unidade Exemplo", 1:2), each = 50),
+        unidade = rep(paste("Classe Exemplo", LETTERS[1:5]), each = 10, length.out = 100), 
+        classe = rep(paste("Apresentacao Exemplo", c("AMP", "COMPR", "FRASCO", "SACHE", "BISNAGA")), each = 20, length.out = 100), 
+        apresentacao = rep(c("Tipo A", "Tipo B", "Tipo C"), length.out = 100), 
+        tipo_produto = sample(paste0("Cod ", 1001:1020), 100, replace = TRUE), 
+        codigo_produto = paste("Produto Exemplo", sample(LETTERS, 100, replace = TRUE), sprintf("%03d", sample(1:50, 100, replace = TRUE))), 
+        produto = sample(1:200, 100, replace = TRUE), 
+        cadum = sample(c(1:250, 280:500, 1000:2000), 100, replace = TRUE), 
+        stringsAsFactors = FALSE
+      )
+    }
+  })
+
+  dados <- reactive({
+    df <- initial_dados()
+    data.frame(
+      unidade = df$distrito,
+      classe = df$unidade, 
+      apresentacao = df$classe, 
+      tipo_produto = df$apresentacao, 
+      codigo_produto = df$tipo_produto, 
+      produto = df$codigo_produto, 
+      cadum = df$produto, 
+      quantidade = df$cadum, 
+      stringsAsFactors = FALSE
+    ) %>%
+      mutate(
+        quantidade = as.numeric(quantidade),
+        produto = as.character(produto),
+        unidade = as.character(unidade),
+        classe = as.character(classe),
+        apresentacao = as.character(apresentacao),
+        tipo_produto = as.character(tipo_produto)
+      ) %>%
+      filter(!is.na(quantidade)) %>%
+      filter(!is.na(unidade) & unidade != "") %>%
+      filter(!is.na(produto) & produto != "") %>%
+      filter(!is.na(apresentacao) & apresentacao != "") %>%
+      filter(!is.na(tipo_produto) & tipo_produto != "")
+  })
   
   observe({
-    if(nrow(dados) == 0) {
+    if(nrow(dados()) == 0) {
       warning("O dataframe 'dados' está vazio ou não contém dados válidos após a filtragem inicial.")
       return()
     }
     
-    unidades_disponiveis <- sort(unique(dados$unidade)) 
+    unidades_disponiveis <- sort(unique(dados()$unidade)) 
     primeira_unidade_selecionada <- if (length(unidades_disponiveis) > 0) {
       unidades_disponiveis[1] 
     } else {
@@ -198,7 +227,7 @@ server <- function(input, output, session) {
                                      maxItems = NULL,
                                      create = FALSE))
     
-    apresentacoes_validas <- dados %>% filter(!is.na(apresentacao) & apresentacao != "") %>% distinct(apresentacao) %>% pull()
+    apresentacoes_validas <- dados() %>% filter(!is.na(apresentacao) & apresentacao != "") %>% distinct(apresentacao) %>% pull()
     apresentacoes_disponiveis <- c("Todas", sort(apresentacoes_validas))
     updateSelectizeInput(session, "apresentacao_selecionada", 
                         choices = apresentacoes_disponiveis, 
@@ -207,7 +236,7 @@ server <- function(input, output, session) {
                                      maxItems = 1,
                                      create = FALSE))
     
-    tipos_produto_disponiveis <- c("Todos", sort(unique(dados$tipo_produto)))
+    tipos_produto_disponiveis <- c("Todos", sort(unique(dados()$tipo_produto)))
     updateSelectizeInput(session, "tipo_produto_selecionado", 
                         choices = tipos_produto_disponiveis, 
                         selected = "Todos",
@@ -215,7 +244,7 @@ server <- function(input, output, session) {
                                      maxItems = 1,
                                      create = FALSE))
     
-    produtos_disponiveis <- sort(unique(dados$produto))
+    produtos_disponiveis <- sort(unique(dados()$produto))
     updateSelectizeInput(session, "produtos_selecionados", 
                         choices = produtos_disponiveis, 
                         selected = character(0),
@@ -223,8 +252,8 @@ server <- function(input, output, session) {
                                      maxItems = NULL,
                                      create = FALSE))
     
-    min_qty <- min(dados$quantidade, na.rm = TRUE)
-    max_qty <- max(dados$quantidade, na.rm = TRUE)
+    min_qty <- min(dados()$quantidade, na.rm = TRUE)
+    max_qty <- max(dados()$quantidade, na.rm = TRUE)
     if (is.finite(min_qty) && is.finite(max_qty) && min_qty <= max_qty) {
       updateSliderInput(session, "quantidade_range", min = min_qty, max = max_qty, value = c(min_qty, max_qty))
     }  else if (is.finite(min_qty) && !is.finite(max_qty)) { 
@@ -244,7 +273,7 @@ server <- function(input, output, session) {
       return(data.frame()) # Retorna um dataframe vazio explicitamente
     }
     
-    df <- dados
+    df <- dados()
     
     df <- df %>% filter(unidade %in% input$unidade_selecionada)
     
