@@ -1,0 +1,12 @@
+name: ConsultaRecife
+title: ConsultaRecife
+username: julianaandresa
+account: julianaandresa
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 15116550
+bundleId: 10665541
+url: https://julianaandresa.shinyapps.io/ConsultaRecife/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
