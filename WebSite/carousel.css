@@ -1,0 +1,162 @@
+/* GLOBAL STYLES
+-------------------------------------------------- */
+/* Padding below the footer and lighter body text */
+
+body {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+  background-color: #F0F8FF; 
+}
+
+.bg-azul-personalizado {
+  background-color: #190483;
+}
+
+/* CUSTOMIZE THE CAROUSEL
+-------------------------------------------------- */
+
+/* Carousel base class */
+.carousel {
+  margin-bottom: 4rem;
+}
+/* Since positioning the image, we need to help out the caption */
+.carousel-caption {
+  bottom: 3rem;
+  z-index: 10;
+}
+
+.carrossel-texto{
+  color: white;
+  font-family:'Times New Roman';
+  font-weight: bolder;
+}
+
+.carrossel-legenda{
+  font-family: 'Times New Roman', Times, serif;
+}
+
+.btn-custom {
+    font-family:sans-serif;
+    background-color: #002e63; /* Um tom um pouco mais escuro para o efeito */
+    border-color: #002e63;
+    color: #ffffff;            /* Cor do texto (branco) */
+}
+
+/* Efeito ao passar o mouse por cima */
+.btn-custom:hover {
+    background-color: #004ea6; /* Um tom um pouco mais claro para o efeito */
+    border-color: #004ea6;
+    color: #ffffff;
+}
+
+.carousel-item {
+  height: 32rem; /* Define uma altura para os slides */
+  background-color: #777;
+}
+.carousel-item > img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  height: 32rem;
+  object-fit: cover; /* Faz a imagem cobrir o espaço */
+}
+
+/* MARKETING CONTENT
+-------------------------------------------------- */
+
+/* Center align the text within the three columns below the carousel */
+.marketing .col-lg-4 {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+.marketing h2 {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  color: #190483;
+  font-weight: 400;
+}
+.marketing .col-lg-4 p {
+  color: black;
+  margin-right: .75rem;
+  margin-left: .75rem;
+}
+
+.border { 
+  border: 2px solid #007bff; /* Cor azul */ border-radius: 10px; /* Cantos arredondados */ 
+}
+
+/* Featurettes
+------------------------- */
+
+.featurette-divider {
+  margin: 5rem 0; /* Space out the Bootstrap <hr> more */
+}
+
+/* Thin out the marketing headings */
+.featurette-heading {
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -.05rem;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  color: #190483;
+}
+
+.lead {
+  color: black;
+}
+
+/* Efeito de hover para a imagem com sombra estática inicial */
+
+.imagem-interativa {
+  /* Adiciona uma sombra inicial mais suave */
+  box-shadow: 0 5px 15px rgba(0, 123, 255, 0.35);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.imagem-interativa:hover {
+  /* Aumenta o tamanho da imagem em 5% */
+  transform: scale(1.05);
+
+  /* Intensifica a sombra ao passar o mouse */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+
+  /* Muda o cursor para uma 'mãozinha' para indicar que é clicável/interativo */
+  cursor: pointer;
+}
+
+/* Footer
+------------------------- */
+.footer-icon i {
+  transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+/* Define o que acontece quando o mouse passa sobre o link */
+.footer-icon:hover i {
+  /* Move o ícone 3 pixels para cima */
+  transform: translateY(-3px);
+
+  /* Muda a cor do ícone para o azul padrão do Bootstrap */
+  color: #190483 !important;
+}
+
+/* RESPONSIVE CSS
+-------------------------------------------------- */
+
+@media (min-width: 40em) {
+  /* Bump up size of carousel content */
+  .carousel-caption p {
+    margin-bottom: 1.25rem;
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+
+  .featurette-heading {
+    font-size: 50px;
+  }
+}
+
+@media (min-width: 62em) {
+  .featurette-heading {
+    margin-top: 7rem;
+  }
+}

@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="pt-br" class="h-100">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Um template de site com um carrossel de imagens e seções de marketing.">
+  <meta name="author" content="Julia e Contribuidores do Bootstrap">
+  <link rel="icon" href="favicon.ico">
+  <title>ConsultaRecife</title>
+
+  <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link href="carousel.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <header>
+      <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-azul-personalizado">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">ConsultaRecife</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+          aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <ul class="navbar-nav me-auto mb-2 mb-md-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="https://github.com/mat-rodrigo/Consulta-RECIFE">Github</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav> 
+  </header>
+
+  <main>
+
+    <section id="myCarousel" class="carousel slide" data-bs-ride="carousel" aria-label="Destaques">
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true"
+          aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      </div>
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img src="imagens/carrossel consulta recife.jpg" class="d-block w-100"
+            alt="Paisagem montanhosa com céu nublado ao amanhecer.">
+          <div class="container">
+            <div class="carousel-caption text-start">
+              <h1 class="carrossel-texto">Consulte seus medicamentos sem sair de casa</h1>
+              <p class="carrossel-legenda">Verifique previamente a disponibilidade do seu medicamento, e busque na USF mais próxima.</p>
+              <p><a class="btn btn-lg btn-custom"
+                  href="https://julianaandresa.shinyapps.io/ConsultaRecife/">Acesse Aqui</a></p>
+            </div>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <img src="imagens/carrossel2.jpg" class="d-block w-100" alt="Vista aérea de um vale verde com um rio.">
+          <div class="container">
+            <div class="carousel-caption">
+              <h1 class="carrossel-texto">Nos siga no Instagram para mais informações</h1>
+              <p class="carrossel-legenda">Encontre mais informações sobre o ConsultaRecife e participe da nossa Comunidade Prática.</p>
+              <p><a class="btn btn-lg btn-custom" href="https://www.instagram.com/consultarecife/">Saiba Mais</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Anterior</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Próximo</span>
+      </button>
+    </section>
+
+    <div class="container marketing">
+
+      <div class="row justify-content-center">
+        <div class="col-lg-4">
+          <img class="rounded-circle" src="imagens/elementos1.jpg" alt="Placeholder para conteúdo">
+          <h2 class="fw-normal">População</h2>
+          <p>Evita deslocamentos desnecessários</p>
+        </div>
+        <div class="col-lg-4">
+          <img class="rounded-circle" src="imagens/elementos.jpg" alt="Placeholder para conteúdo">
+          <h2 class="fw-normal">Profissionais de Saúde</h2>
+          <p>Facilita o controle de estoque</p>
+        </div>
+      </div>
+      <hr class="featurette-divider">
+
+      <div class="row featurette">
+        <div class="col-md-7">
+          <h2 class="featurette-heading fw-normal lh-1">O que é o ConsultaRecife? <span
+              class="text-body-secondary"></span></h2>
+          <p class="lead">Uma plataforma criada para você que retira remédios na rede pública do Recife. Com apenas
+            alguns cliques você confere a disponbilidade do seu medicamento nas USFs da cidade. Sem burocria, de forma
+            rápida e fácil.</p>
+        </div>
+        <div class="col-md-5">
+          <img class="img-fluid mx-auto border imagem-interativa" src="imagens/usf1.jpg" alt="USF Encanta Moça 500x500">
+        </div>
+      </div>
+
+      <hr class="featurette-divider">
+
+      <div class="row featurette">
+        <div class="col-md-7 order-md-2">
+          <h2 class="featurette-heading fw-normal lh-1">Sua saúde, mais praticidade! <span
+              class="text-body-secondary"></span></h2>
+          <p class="lead"> Com a nossa nova ferramenta online, você pode verificar rapidamente se o seu medicamento está
+            disponível para retirada. Saia de casa com a certeza de que sua medicação estará à sua espera na USF mais
+            próxima.</p>
+        </div>
+        <div class="col-md-5 order-md-1">
+          <img class="img-fluid mx-auto border imagem-interativa" src="imagens/medicamentos2.jpg" alt="Mão pegando medicamentos 500x500">
+        </div>
+      </div>
+
+      <hr class="featurette-divider">
+
+      <div class="row featurette">
+        <div class="col-md-7">
+          <h2 class="featurette-heading fw-normal lh-1">Idealizadores <span class="text-body-secondary"></span></h2>
+          <p class="lead">O ConsultaRecife foi criado pelos discentes Juliana Lima e Mateus Rodrigo, durante a
+            disciplina de Gestão da Informação e do Conhecimento, curso de Licenciatura em Computação da Universidade
+            Federal Rural de Pernambuco (UFRPE).</p>
+        </div>
+        <div class="col-md-5">
+          <img class="img-fluid mx-auto border imagem-interativa" src="imagens/ufrpe.jpg" alt="Placeholder de imagem 500x500">
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="container">
+    <div class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+      <p class="mb-0 text-body-secondary">&copy; 2025 ConsultaRecife</p>
+
+      <ul class="nav list-unstyled d-flex">
+        <li class="ms-3">
+          <a class="text-body-secondary footer-icon" href="mailto:juliana.andresa@ufrpe.br">
+            <i class="bi bi-envelope" style="font-size: 1.4rem;"></i>
+          </a>
+        </li>
+        <li class="ms-3">
+          <a class="text-body-secondary footer-icon" href="https://www.instagram.com/consultarecife/">
+            <i class="bi bi-instagram" style="font-size: 1.4rem;"></i>
+          </a>
+        </li>
+        <li class="ms-3">
+          <a class="text-body-secondary footer-icon" href="https://github.com/mat-rodrigo/Consulta-RECIFE">
+            <i class="bi bi-github" style="font-size: 1.4rem;"></i>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </footer>
+  <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
